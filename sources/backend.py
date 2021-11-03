@@ -4,6 +4,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from abc import ABC, abstractmethod
 import time
 
+CSS_CLASS_FOR_PPL_COUNT = "uGOf1d"
+COUNT_NOT_FOUND = "css element {} for people count not found".format(CSS_CLASS_FOR_PPL_COUNT)
+
 
 class Backend(ABC):
     # string matching may be more reliable than js generated classes/xpath/ids...
@@ -11,6 +14,7 @@ class Backend(ABC):
         "Uneix-me ara",
         "Unirse ahora",
         "Join now",
+        "Присоединиться"
     ]
     ask_join_buttons = [
         "Sol·licita unir",  # incomplete match is valid
@@ -95,10 +99,16 @@ class Backend(ABC):
             pass
         self.driver.quit()
 
-    def get_num_people(self):
+    def get_num_people_from_css(self):
         try:
-            ppl = self.driver.find_element_by_class_name("wnPUne.N0PJ8e").text
-            return int(ppl)
+            ppl = self.driver.find_element_by_class_name(CSS_CLASS_FOR_PPL_COUNT).text
+            return ppl
+        except:
+            return COUNT_NOT_FOUND
+
+    def get_num_people_from_text(self, text):
+        try:
+            return int(text)
         except:
             return -1
 
@@ -128,7 +138,7 @@ class Backend(ABC):
         if (not self.__reconnect(meet_url, True)):
             return
         current_time = time.time()
-        current_ppl = self.get_num_people()
+        current_ppl = self.get_num_people_from_text(self.get_num_people_from_css())
         soft_end = current_time + min_seconds
         hard_end = current_time + max_seconds
         max_ppl = 0
@@ -136,8 +146,9 @@ class Backend(ABC):
             if (not self.__reconnect(meet_url, False)):
                 break
             max_ppl = max(max_ppl, current_ppl)
-            tmp = self.get_num_people()
+            tmp = self.get_num_people_from_text(self.get_num_people_from_css())
             current_ppl = tmp if tmp != -1 else current_ppl
+            print(f"current_ppl: {current_ppl}")
             current_time = time.time()
-            time.sleep(1)
+            time.sleep(5)
         self.exit()

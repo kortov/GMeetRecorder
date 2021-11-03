@@ -1,13 +1,14 @@
-version: "3.0"
+version: '3.5'
 services:
   local:
+    container_name: gmeet
     build: .
+    image: gmeet:latest
+    env_file:
+      - env-variables.env
     environment:
+      - PYTHONUNBUFFERED=1
       - BACKEND=${BACKEND:-gmail}
-      - EMAIL
-      - ORG_USER
-      - PASSWORD
-      - MEET_URL
       - VIDEO_NAME=${VIDEO_NAME:-video}
       - MAX_DURATION=${MAX_DURATION:-7200}
       - MIN_DURATION=${MIN_DURATION:-1800}

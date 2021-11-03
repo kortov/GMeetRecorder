@@ -35,8 +35,10 @@ to automate temporized executions.
 #### Example:
 Record a call using UPC credentials with a duration between 60 and 120 seconds (the bot may exit if 83% of the people already left) into `~/CoolFolder/vid_1_23_45.webm`.
 
-Inside the project directory run:
+On Linux inside the project directory run:
 `BACKEND=upc EMAIL=john.smith@estudiantat.upc.edu ORG_USER=john.smith PASSWORD='h4k3rm4n1234' MEET_URL=https://meet.google.com/eas-tere-ggy MIN_DURATION=60 MAX_DURATION=120 OUTPUT_DIR=~/CoolFolder VIDEO_NAME=vid_1_23_45 FRAC_TO_EXIT=0.83 docker-compose up`
+
+or for Windows set env variables in env-variables.env file and run `docker-compose up`
 
 ## FAQ
 > How can i fully automate recordings?
